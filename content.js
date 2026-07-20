@@ -20,45 +20,41 @@ function replaceHomePage(vids) {
 }
 
 function convertToHTML(vids) {
-
-	const result = Array.from()
+	const result = []
 
 	if (vids.length === 0) {
-		const vidElement = document.createLement('div')
-		vidElement.innerHTML = 
+		const vidElement = document.createElement('div')
+		vidElement.className = 'warning-container'
+		vidElement.innerHTML = `
+			<span class="warning">
+				You dont got any youtube vids on your history, this extension
+				works off of history
+			</span>
 		`
-		 <span class="subtitle">
-			 You dont got any youtube vids on your history, this extension
-			 works off of history
-		</span>
-		`
+		result.push(vidElement)
+		return result
 	}
 
-	vids.forEach( (vid) => {
+	vids.forEach((vid) => {
 		const vidElement = document.createElement('div')
-		vidElement.innerHTML = 
-	`
-			<a href="${vid.url}" id="vid-link">
-				<div id="thumbnail-container">
-					<div id="vid-thumbnail"></div>
-					<span id="vid-duration">${vid.videoLength}</span>
+		vidElement.className = 'vid-card'
+		vidElement.innerHTML = `
+			<a href="${vid.url}" class="vid-link">
+				<div class="thumbnail-container">
+					<div class="vid-thumbnail" style="background-image: url('${vid.thumbnail}')"></div>
+					<span class="vid-duration">${vid.videoLength}</span>
 				</div>
-				<span id="vid-title">${vid.title}</span>
-				<div id="channel-info">
-					<div id="channel-icon"></div>
-					<span id="channel-name">${vid.channelName}</span>
+				<div class="vid-info">
+					<div class="channel-icon"></div>
+					<div class="vid-text">
+						<span class="vid-title">${vid.title}</span>
+						<span class="channel-name">${vid.channelName}</span>
+					</div>
 				</div>
 			</a>
-	`
-
-	result.append(vidElement)
-
+		`
+		result.push(vidElement)
 	})
 
-	console.log(result)
-
 	return result
-	
 }
-
-

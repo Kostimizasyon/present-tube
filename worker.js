@@ -48,7 +48,7 @@ async function scrapeRecommendedFromSelected(selectedHistory) {
 		selectedHistory.map(video => scrapeRecommendedFromLink(video.url, windowId))
 	)
 
-    chrome.windows.remove(windowId)
+    // chrome.windows.remove(windowId)
 
     return allResults.flat().slice(0, 12); //TODO: also input
 }
@@ -96,44 +96,36 @@ async function scrapeReccommendedFromTab(tabId) {
                 };
 
                 // 1. Wait for the new lockup view model to render
-                await waitForSelector('yt-lockup-view-model');
+                await waitForSelector('yt-lockup-view-model', 20000);
 
                 // 2. Select all recommendation instances
                 const videoNodes = document.querySelectorAll('yt-lockup-view-model');
                 const data = [];
 
                 videoNodes.forEach((node) => {
-                    // Title & URL
-                    const titleEl = node.querySelector('.yt-lockup-metadata-view-model__title');
-                    const title = titleEl?.innerText?.trim();
-                    const url = node.querySelector('a.yt-lockup-view-model__content-image')?.href;
+                    // Title & URL — title lives on the <a>, inside the metadata text container
+                    const titleEl = node.querySelector('.ytLockupMetadataViewModelTitle');
+                    const title = titleEl?.getAttribute('aria-label')?.trim() || titleEl?.innerText?.trim();
+                    const url = titleEl?.href; // the <a> itself IS ytLockupMetadataViewModelTitle
 
-                    // Video Length (the timestamp badge on the thumbnail)
-                    const videoLenght = node.querySelector('.yt-badge-shape__text')?.innerText || "0:00";
+                    // Video Length — not visible in this screenshot, need to expand the thumbnail <a> to confirm
+                    const videoLength = node.querySelector('.yt-badge-shape__text')?.innerText || "0:00";
 
-                    // Thumbnail
-                    const thumbContainer = node.querySelector('.ytThumbnailViewModelImage');
-                    const thumbImg = thumbContainer?.querySelector('img');
-                    const thumbnail = thumbImg?.src || thumbImg?.getAttribute('src') || "";
+                    // Thumbnail — also need to expand the collapsed <a class="ytLockupViewModelContentImage">
+                    const thumbImg = node.querySelector('.ytLockupViewModelContentImage img');
+                    const thumbnail = thumbImg?.src || "";
 
-                    // Channel Name (Found in the first metadata row)
-                    const channelNameEl = node.querySelector('.yt-content-metadata-view-model__metadata-row');
+                    // Channel — the Metadata div under TextContainer is collapsed in your screenshot (2nd metadata div)
+                    const channelNameEl = node.querySelector('.ytLockupMetadataViewModelMetadata');
                     const channelName = channelNameEl?.innerText?.trim() || "Unknown Channel";
 
-                    // Channel Icon
-                    const channelIcon = "";
-
                     if (title && url) {
-                        data.push({ 
-                            title, 
-                            videoLenght, 
-                            url, 
-                            thumbnail, 
-                            channelName, 
-                            channelIcon 
-                        });
+                        data.push({ title, videoLength, url, thumbnail, channelName, channelIcon: "" });
                     }
                 });
+                
+                console.log("Data is:", data)
+                
                 return data;
             }
         });
