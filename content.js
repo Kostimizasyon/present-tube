@@ -1,17 +1,38 @@
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log("Content script received:", message)
+
+  if (message.type === 'REPLACE_HOMEPAGE') {
+    replaceHomePage(message.vids)
+  }
+})
+
 // delete the youtube homepage, replace with our own
 function replaceHomePage(vids) {
-	const homePage = document.querySelector()
-	// ths likeyl wont work too well need to find a way to rpelace the div with it instead of jsut removing
-	const children = homePage.querySelectorAll("*")
+
+	console.log("Replacehomepage")
 	
+	const homePage = document.querySelector("#primary")
+	// ths likeyl wont work too well need to find a way to rpelace the div with it instead of jsut removing
+
 	const newVids = convertToHTML(vids)
 
-	homePage.replaceChildren(children, ...newVids)	// spread cuz replaceChildren like spreading
+	homePage.replaceChildren(...newVids)	// spread cuz replaceChildren like spreading
 }
 
 function convertToHTML(vids) {
 
-	const result = {}
+	const result = Array.from()
+
+	if (vids.length === 0) {
+		const vidElement = document.createLement('div')
+		vidElement.innerHTML = 
+		`
+		 <span class="subtitle">
+			 You dont got any youtube vids on your history, this extension
+			 works off of history
+		</span>
+		`
+	}
 
 	vids.forEach( (vid) => {
 		const vidElement = document.createElement('div')
@@ -34,4 +55,10 @@ function convertToHTML(vids) {
 
 	})
 
+	console.log(result)
+
+	return result
+	
 }
+
+

@@ -10,10 +10,9 @@
 	],
 	"content_scripts": [
 		{
-			"matches": ["https://www.youtube.com"],
+			"matches": ["*://*.youtube.com/*"],
 			"js": ["content.js"],
-			"run_at": "document_idle"		
-		}
+			"run_at": "document_idle"		}
 	],
 	"host_permissions": [
 		"https://*.youtube.com/*"
