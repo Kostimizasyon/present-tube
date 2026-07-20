@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
   console.log("Content script received:", message)
 
   if (message.type === 'REPLACE_HOMEPAGE') {
@@ -20,42 +20,48 @@ function replaceHomePage(vids) {
 }
 
 function convertToHTML(vids) {
-	const result = []
+
+	const result = new Array()
 
 	if (vids.length === 0) {
 		const vidElement = document.createElement('div')
-		vidElement.className = 'warning-container'
-		vidElement.innerHTML = `
-			<span class="warning">
-				You dont got any youtube vids on your history, this extension
-				works off of history
-			</span>
+		div.className = 'warning-container'
+		vidElement.innerHTML = 
+		`
+		 <span class="warning">
+			 You dont got any youtube vids on your history, this extension
+			 works off of history
+		</span>
 		`
 		result.push(vidElement)
-		return result
+		return result;
 	}
 
-	vids.forEach((vid) => {
+	vids.forEach( (vid) => {
 		const vidElement = document.createElement('div')
-		vidElement.className = 'vid-card'
-		vidElement.innerHTML = `
-			<a href="${vid.url}" class="vid-link">
-				<div class="thumbnail-container">
-					<div class="vid-thumbnail" style="background-image: url('${vid.thumbnail}')"></div>
-					<span class="vid-duration">${vid.videoLength}</span>
+		vidElement.innerHTML = 
+	`
+			<a href="${vid.url}" id="vid-link">
+				<div id="thumbnail-container">
+					<div id="vid-thumbnail"></div>
+					<span id="vid-duration">${vid.videoLength}</span>
 				</div>
-				<div class="vid-info">
-					<div class="channel-icon"></div>
-					<div class="vid-text">
-						<span class="vid-title">${vid.title}</span>
-						<span class="channel-name">${vid.channelName}</span>
-					</div>
+				<span id="vid-title">${vid.title}</span>
+				<div id="channel-info">
+					<div id="channel-icon"></div>
+					<span id="channel-name">${vid.channelName}</span>
 				</div>
 			</a>
-		`
-		result.push(vidElement)
+	`
+
+	result.push(vidElement)
+
 	})
 
+	console.log(result)
+
 	return result
+	
 }
+
 
