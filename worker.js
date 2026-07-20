@@ -48,7 +48,7 @@ async function scrapeRecommendedFromSelected(selectedHistory) {
 		selectedHistory.map(video => scrapeRecommendedFromLink(video.url, windowId))
 	)
 
-    // chrome.windows.remove(windowId)
+    chrome.windows.remove(windowId)
 
     return allResults.flat().slice(0, 12); //TODO: also input
 }
@@ -123,9 +123,7 @@ async function scrapeReccommendedFromTab(tabId) {
                         data.push({ title, videoLength, url, thumbnail, channelName, channelIcon: "" });
                     }
                 });
-                
-                console.log("Data is:", data)
-                
+                              
                 return data;
             }
         });
