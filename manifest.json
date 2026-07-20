@@ -1,0 +1,26 @@
+{
+	"manifest_version": 3,
+	"name": "Testing Shit",
+	"version": "1.0",
+	"permissions": [
+		"history",
+		"scripting",
+		"tabs",
+		"activeTab"
+	],
+	"content_scripts": [
+		{
+			"matches": ["*://*.youtube.com/*"],
+			"js": ["content.js"],
+			"run_at": "document_idle"		}
+	],
+	"host_permissions": [
+		"https://*.youtube.com/*"
+	],
+	"background": {
+		"service_worker": "worker.js"
+	},
+	"action": {
+		"default_popup": "popup.html"
+	}
+}
